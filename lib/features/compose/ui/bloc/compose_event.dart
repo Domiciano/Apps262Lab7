@@ -1,17 +1,11 @@
-import 'package:moviles_auth/features/avatar/domain/entities/photo_source.dart';
-
 /// Something the compose screen asks the ComposeBloc to do.
 abstract class ComposeEvent {}
 
-/// The user wants to attach a photo from the gallery or the camera.
+/// The user wants to attach a photo from the gallery.
 class ComposePhotoRequested extends ComposeEvent {
-  final PhotoSource source;
-
-  ComposePhotoRequested(this.source);
-
   @override
   String toString() {
-    return 'ComposePhotoRequested(${source.name})';
+    return 'ComposePhotoRequested()';
   }
 }
 

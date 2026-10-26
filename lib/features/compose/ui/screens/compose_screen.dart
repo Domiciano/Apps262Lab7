@@ -34,13 +34,11 @@ class _ComposeScreenState extends State<ComposeScreen> {
     super.dispose();
   }
 
-  Future<void> _choosePhoto() async {}
-
   Widget _photo(ComposeState state) {
     final photo = state.photo;
     if (photo == null) {
       return OutlinedButton.icon(
-        onPressed: () => _choosePhoto(),
+        onPressed: () {},
         icon: const Icon(Icons.add_photo_alternate_outlined),
         label: const Text('Agregar foto'),
       );

@@ -35,8 +35,6 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  Future<void> _choosePhoto() async {}
-
   Widget _page(FeedState state) {
     final bloc = context.read<FeedBloc>();
     if (_index == 1) {
@@ -48,7 +46,7 @@ class _HomeScreenState extends State<HomeScreen> {
         profile: profile,
         posts: state.myPosts,
         isUploading: state.avatarStatus == AvatarStatus.uploading,
-        onChangePhoto: () => _choosePhoto(),
+        onChangePhoto: () {},
         onLike: (post) => bloc.add(FeedLikeToggled(post)),
         onSignOut: () => bloc.add(SignOutRequested()),
       );

@@ -1,4 +1,3 @@
-import 'package:moviles_auth/features/avatar/domain/entities/photo_source.dart';
 import 'package:moviles_auth/features/avatar/domain/entities/picked_photo.dart';
 import 'package:moviles_auth/features/posts/data/source/supabase_post_data_source.dart';
 import 'package:moviles_auth/features/posts/domain/entities/post.dart';
@@ -34,7 +33,7 @@ class PostRepositoryImpl implements PostRepository {
   }
 
   @override
-  Future<PickedPhoto?> pickImage(PhotoSource source) async {
+  Future<PickedPhoto?> pickImage() async {
     throw UnimplementedError();
   }
 

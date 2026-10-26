@@ -1,4 +1,3 @@
-import 'package:moviles_auth/features/avatar/domain/entities/photo_source.dart';
 import 'package:moviles_auth/features/posts/domain/entities/post.dart';
 
 /// Something the home screen asks the FeedBloc to do.
@@ -48,14 +47,10 @@ class FeedLikeToggled extends FeedEvent {
   }
 }
 
-/// The user chose a new profile photo from the gallery or the camera.
+/// The user wants a new profile photo from the gallery.
 class AvatarChangeRequested extends FeedEvent {
-  final PhotoSource source;
-
-  AvatarChangeRequested(this.source);
-
   @override
   String toString() {
-    return 'AvatarChangeRequested(${source.name})';
+    return 'AvatarChangeRequested()';
   }
 }
