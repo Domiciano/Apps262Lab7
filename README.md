@@ -10,7 +10,15 @@ Las fotos de perfil van en un **bucket público**, `avatars`: se muestran con un
 ## Cómo correrlo
 
 1. Pon la `Project URL` y la `publishable key` de **tu** proyecto de Supabase en `lib/main.dart`.
-2. Copia aquí la carpeta `supabase/` de tu Laboratorio 6. Declara los buckets en `supabase/config.toml` y agrega las migraciones que dice el laboratorio.
+2. Conecta la carpeta con tu proyecto de Supabase, el mismo del Laboratorio 6:
+
+```bash
+npx supabase init
+npx supabase link --project-ref TU_IDENTIFICADOR
+npx supabase migration fetch --linked
+```
+
+   Reemplaza el `config.toml` que crea `init` por el del curso, y sigue los pasos del laboratorio para los buckets y las migraciones nuevas.
 3. Corre la app:
 
 ```bash
