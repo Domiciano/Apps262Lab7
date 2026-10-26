@@ -1,9 +1,12 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:moviles_auth/components/avatar.dart';
 import 'package:moviles_auth/features/auth/domain/entities/profile.dart';
 import 'package:moviles_auth/features/avatar/domain/entities/photo_source.dart';
+import 'package:moviles_auth/features/avatar/domain/entities/picked_photo.dart';
 import 'package:moviles_auth/features/compose/ui/bloc/compose_bloc.dart';
 import 'package:moviles_auth/features/compose/ui/bloc/compose_event.dart';
 import 'package:moviles_auth/features/compose/ui/bloc/compose_state.dart';
@@ -39,8 +42,90 @@ class _FakeComposeBloc extends Bloc<ComposeEvent, ComposeState>
     implements ComposeBloc {
   _FakeComposeBloc() : super(const ComposeState()) {
     on<ComposeSubmitted>((event, emit) {});
+    on<ComposePhotoRequested>(
+      (event, emit) => emit(state.copyWith(photo: _photo)),
+    );
+    on<ComposePhotoRemoved>(
+      (event, emit) => emit(state.copyWith(removePhoto: true)),
+    );
   }
 }
+
+final _photo = PickedPhoto(
+  bytes: Uint8List.fromList(const [
+    0x89,
+    0x50,
+    0x4E,
+    0x47,
+    0x0D,
+    0x0A,
+    0x1A,
+    0x0A,
+    0x00,
+    0x00,
+    0x00,
+    0x0D,
+    0x49,
+    0x48,
+    0x44,
+    0x52,
+    0x00,
+    0x00,
+    0x00,
+    0x01,
+    0x00,
+    0x00,
+    0x00,
+    0x01,
+    0x08,
+    0x06,
+    0x00,
+    0x00,
+    0x00,
+    0x1F,
+    0x15,
+    0xC4,
+    0x89,
+    0x00,
+    0x00,
+    0x00,
+    0x0D,
+    0x49,
+    0x44,
+    0x41,
+    0x54,
+    0x78,
+    0x9C,
+    0x63,
+    0xF8,
+    0xCF,
+    0xC0,
+    0xF0,
+    0x1F,
+    0x00,
+    0x05,
+    0x00,
+    0x01,
+    0xFF,
+    0x89,
+    0x99,
+    0x3D,
+    0x1D,
+    0x00,
+    0x00,
+    0x00,
+    0x00,
+    0x49,
+    0x45,
+    0x4E,
+    0x44,
+    0xAE,
+    0x42,
+    0x60,
+    0x82,
+  ]),
+  extension: 'png',
+);
 
 class _EventRecorder extends BlocObserver {
   final events = <Object?>[];
@@ -94,6 +179,13 @@ void main() {
     );
     expect(find.text('A'), findsOneWidget);
     expect(find.byType(Image), findsNothing);
+  });
+
+  test('ComposeState.copyWith keeps the photo until it is removed', () {
+    final withPhoto = const ComposeState().copyWith(photo: _photo);
+    final loading = withPhoto.copyWith(status: ComposeStatus.loading);
+    expect(loading.photo, same(_photo));
+    expect(loading.copyWith(removePhoto: true).photo, isNull);
   });
 
   test('FeedState.copyWith keeps what it is not told to change', () {
@@ -189,5 +281,31 @@ void main() {
     await tester.pump();
     final event = recorder.events.single as ComposeSubmitted;
     expect(event.content, 'Hola muro');
+  });
+
+  testWidgets('ComposeScreen attaches and removes a photo', (tester) async {
+    final recorder = _EventRecorder();
+    Bloc.observer = recorder;
+    await tester.pumpWidget(
+      MaterialApp(
+        home: BlocProvider<ComposeBloc>(
+          create: (_) => _FakeComposeBloc(),
+          child: const ComposeScreen(),
+        ),
+      ),
+    );
+    await tester.tap(find.text('Agregar foto'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Tomar una foto'));
+    await tester.pumpAndSettle();
+    final request = recorder.events.whereType<ComposePhotoRequested>().single;
+    expect(request.source, PhotoSource.camera);
+    expect(find.byType(Image), findsOneWidget);
+    expect(find.text('Agregar foto'), findsNothing);
+
+    await tester.tap(find.byTooltip('Quitar foto'));
+    await tester.pumpAndSettle();
+    expect(find.byType(Image), findsNothing);
+    expect(find.text('Agregar foto'), findsOneWidget);
   });
 }

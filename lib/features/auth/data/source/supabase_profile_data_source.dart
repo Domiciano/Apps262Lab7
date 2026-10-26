@@ -29,4 +29,8 @@ class SupabaseProfileDataSource {
       throw Exception(e.message);
     }
   }
+
+  Future<void> updateAvatarPath(String id, String path) async {
+    throw UnimplementedError();
+  }
 }

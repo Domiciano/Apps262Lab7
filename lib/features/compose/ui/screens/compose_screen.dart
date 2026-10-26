@@ -2,13 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:moviles_auth/components/error_message.dart';
+import 'package:moviles_auth/components/photo_source_sheet.dart';
 import 'package:moviles_auth/components/primary_button.dart';
+import 'package:moviles_auth/features/avatar/domain/entities/photo_source.dart';
 import 'package:moviles_auth/features/compose/ui/bloc/compose_bloc.dart';
 import 'package:moviles_auth/features/compose/ui/bloc/compose_event.dart';
 import 'package:moviles_auth/features/compose/ui/bloc/compose_state.dart';
 import 'package:moviles_auth/theme/app_theme.dart';
 
-/// Writes a new post and goes back to the wall once it is published.
+/// Writes a new post, with an optional photo, and goes back to the wall once it is published.
 class ComposeScreen extends StatefulWidget {
   const ComposeScreen({super.key});
 
@@ -32,6 +34,48 @@ class _ComposeScreenState extends State<ComposeScreen> {
   void dispose() {
     _contentController.dispose();
     super.dispose();
+  }
+
+  Future<void> _choosePhoto() async {
+    final source = await showModalBottomSheet<PhotoSource>(
+      context: context,
+      builder: (context) => const PhotoSourceSheet(),
+    );
+    if (source != null && mounted) {
+      context.read<ComposeBloc>().add(ComposePhotoRequested(source));
+    }
+  }
+
+  Widget _photo(ComposeState state) {
+    final photo = state.photo;
+    if (photo == null) {
+      return OutlinedButton.icon(
+        onPressed: () => _choosePhoto(),
+        icon: const Icon(Icons.add_photo_alternate_outlined),
+        label: const Text('Agregar foto'),
+      );
+    }
+    return Stack(
+      children: [
+        Container(
+          height: 200,
+          width: double.infinity,
+          clipBehavior: Clip.antiAlias,
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
+          child: Image.memory(photo.bytes, fit: BoxFit.cover),
+        ),
+        Positioned(
+          top: 8,
+          right: 8,
+          child: IconButton.filledTonal(
+            onPressed: () =>
+                context.read<ComposeBloc>().add(ComposePhotoRemoved()),
+            icon: const Icon(Icons.close),
+            tooltip: 'Quitar foto',
+          ),
+        ),
+      ],
+    );
   }
 
   @override
@@ -71,6 +115,8 @@ class _ComposeScreenState extends State<ComposeScreen> {
                             : AppColors.textSecondary,
                       ),
                     ),
+                    const SizedBox(height: 16),
+                    _photo(state),
                     const SizedBox(height: 16),
                     if (state.status == ComposeStatus.failure &&
                         state.errorMessage != null) ...[

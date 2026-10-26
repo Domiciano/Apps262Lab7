@@ -1,8 +1,10 @@
+import 'package:moviles_auth/features/avatar/domain/entities/photo_source.dart';
+import 'package:moviles_auth/features/avatar/domain/entities/picked_photo.dart';
 import 'package:moviles_auth/features/posts/data/source/supabase_post_data_source.dart';
 import 'package:moviles_auth/features/posts/domain/entities/post.dart';
 import 'package:moviles_auth/features/posts/domain/repository/post_repository.dart';
 
-/// Fulfils PostRepository by delegating on the Supabase data source.
+/// Fulfils PostRepository with the posts table, the phone and the post-images bucket.
 class PostRepositoryImpl implements PostRepository {
   final SupabasePostDataSource _dataSource = SupabasePostDataSource();
 
@@ -17,8 +19,8 @@ class PostRepositoryImpl implements PostRepository {
   }
 
   @override
-  Future<void> create(String content) {
-    return _dataSource.create(content);
+  Future<void> create(String content, {String? imagePath}) {
+    return _dataSource.create(content, imagePath: imagePath);
   }
 
   @override
@@ -29,5 +31,15 @@ class PostRepositoryImpl implements PostRepository {
   @override
   Future<void> unlike(String postId) {
     return _dataSource.unlike(postId);
+  }
+
+  @override
+  Future<PickedPhoto?> pickImage(PhotoSource source) async {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<String> uploadImage(PickedPhoto photo) async {
+    throw UnimplementedError();
   }
 }

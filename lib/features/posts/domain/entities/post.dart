@@ -1,4 +1,4 @@
-/// A post of the wall, with its author and its likes already resolved.
+/// A post of the wall, with its author, its image and its likes already resolved.
 class Post {
   final String id;
   final String content;
@@ -6,6 +6,7 @@ class Post {
   final String authorUsername;
   final String authorName;
   final String? authorAvatarUrl;
+  final String? imageUrl;
   final int likeCount;
   final bool likedByMe;
 
@@ -16,6 +17,7 @@ class Post {
     required this.authorUsername,
     required this.authorName,
     this.authorAvatarUrl,
+    this.imageUrl,
     required this.likeCount,
     required this.likedByMe,
   });
@@ -28,6 +30,7 @@ class Post {
       authorUsername: authorUsername,
       authorName: authorName,
       authorAvatarUrl: authorAvatarUrl,
+      imageUrl: imageUrl,
       likeCount: likeCount ?? this.likeCount,
       likedByMe: likedByMe ?? this.likedByMe,
     );

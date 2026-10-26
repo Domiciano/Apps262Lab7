@@ -24,7 +24,7 @@ class SupabasePostDataSource {
           .eq('my_like.profile_id', _uid)
           .order('created_at', ascending: false)
           .range(from, from + size - 1);
-      return rows.map(_toPost).toList();
+      return _toPosts(rows);
     } on PostgrestException catch (e) {
       throw Exception(e.message);
     }
@@ -39,13 +39,13 @@ class SupabasePostDataSource {
           .eq('my_like.profile_id', _uid)
           .order('created_at', ascending: false)
           .limit(limit);
-      return rows.map(_toPost).toList();
+      return _toPosts(rows);
     } on PostgrestException catch (e) {
       throw Exception(e.message);
     }
   }
 
-  Future<void> create(String content) async {
+  Future<void> create(String content, {String? imagePath}) async {
     try {
       await _client.from('posts').insert({
         'profile_id': _uid,
@@ -77,6 +77,10 @@ class SupabasePostDataSource {
     } on PostgrestException catch (e) {
       throw Exception(e.message);
     }
+  }
+
+  Future<List<Post>> _toPosts(List<Map<String, dynamic>> rows) async {
+    return rows.map(_toPost).toList();
   }
 
   Post _toPost(Map<String, dynamic> row) {

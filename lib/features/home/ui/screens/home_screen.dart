@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'package:moviles_auth/components/photo_source_sheet.dart';
 import 'package:moviles_auth/features/avatar/domain/entities/photo_source.dart';
 import 'package:moviles_auth/features/home/ui/bloc/feed_bloc.dart';
 import 'package:moviles_auth/features/home/ui/bloc/feed_event.dart';
@@ -39,23 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> _choosePhoto() async {
     final source = await showModalBottomSheet<PhotoSource>(
       context: context,
-      builder: (context) => SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              leading: const Icon(Icons.photo_library_outlined),
-              title: const Text('Elegir de la galería'),
-              onTap: () => Navigator.pop(context, PhotoSource.gallery),
-            ),
-            ListTile(
-              leading: const Icon(Icons.photo_camera_outlined),
-              title: const Text('Tomar una foto'),
-              onTap: () => Navigator.pop(context, PhotoSource.camera),
-            ),
-          ],
-        ),
-      ),
+      builder: (context) => const PhotoSourceSheet(),
     );
     if (source != null && mounted) {
       context.read<FeedBloc>().add(AvatarChangeRequested(source));

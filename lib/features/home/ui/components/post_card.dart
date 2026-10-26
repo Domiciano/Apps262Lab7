@@ -4,7 +4,7 @@ import 'package:moviles_auth/components/avatar.dart';
 import 'package:moviles_auth/features/posts/domain/entities/post.dart';
 import 'package:moviles_auth/theme/app_theme.dart';
 
-/// Card of one post: author with photo, text, date and the heart with its counter.
+/// Card of one post: author with photo, text, image, date and the heart with its counter.
 class PostCard extends StatelessWidget {
   final Post post;
   final Function() onLike;
@@ -64,10 +64,33 @@ class PostCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 8),
-          Text(
-            post.content,
-            style: const TextStyle(fontSize: 15, color: AppColors.textPrimary),
-          ),
+          if (post.content.isNotEmpty)
+            Text(
+              post.content,
+              style: const TextStyle(
+                fontSize: 15,
+                color: AppColors.textPrimary,
+              ),
+            ),
+          if (post.imageUrl != null) ...[
+            const SizedBox(height: 8),
+            Container(
+              height: 220,
+              width: double.infinity,
+              margin: const EdgeInsets.only(right: 8),
+              clipBehavior: Clip.antiAlias,
+              decoration: BoxDecoration(
+                color: AppColors.background,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Image.network(
+                post.imageUrl!,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) =>
+                    const Center(child: Icon(Icons.broken_image_outlined)),
+              ),
+            ),
+          ],
           Row(
             children: [
               IconButton(

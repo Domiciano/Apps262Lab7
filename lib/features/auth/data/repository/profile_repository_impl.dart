@@ -15,4 +15,9 @@ class ProfileRepositoryImpl implements ProfileRepository {
   Future<Profile> getProfile(String id) {
     return _dataSource.getProfile(id);
   }
+
+  @override
+  Future<void> updateAvatarPath(String id, String path) async {
+    throw UnimplementedError();
+  }
 }
