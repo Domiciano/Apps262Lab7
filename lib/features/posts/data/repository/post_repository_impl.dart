@@ -41,4 +41,9 @@ class PostRepositoryImpl implements PostRepository {
   Future<String> uploadImage(PickedPhoto photo) async {
     throw UnimplementedError();
   }
+
+  @override
+  Future<String> imageUrl(String path) async {
+    throw UnimplementedError();
+  }
 }

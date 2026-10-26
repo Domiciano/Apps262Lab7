@@ -10,4 +10,5 @@ abstract class PostRepository {
   Future<void> unlike(String postId);
   Future<PickedPhoto?> pickImage();
   Future<String> uploadImage(PickedPhoto photo);
+  Future<String> imageUrl(String path);
 }

@@ -24,7 +24,7 @@ class SupabasePostDataSource {
           .eq('my_like.profile_id', _uid)
           .order('created_at', ascending: false)
           .range(from, from + size - 1);
-      return _toPosts(rows);
+      return rows.map(_toPost).toList();
     } on PostgrestException catch (e) {
       throw Exception(e.message);
     }
@@ -39,7 +39,7 @@ class SupabasePostDataSource {
           .eq('my_like.profile_id', _uid)
           .order('created_at', ascending: false)
           .limit(limit);
-      return _toPosts(rows);
+      return rows.map(_toPost).toList();
     } on PostgrestException catch (e) {
       throw Exception(e.message);
     }
@@ -77,10 +77,6 @@ class SupabasePostDataSource {
     } on PostgrestException catch (e) {
       throw Exception(e.message);
     }
-  }
-
-  Future<List<Post>> _toPosts(List<Map<String, dynamic>> rows) async {
-    return rows.map(_toPost).toList();
   }
 
   Post _toPost(Map<String, dynamic> row) {

@@ -7,4 +7,8 @@ class SupabasePostImageDataSource {
   Future<String> upload(PickedPhoto photo) async {
     throw UnimplementedError();
   }
+
+  Future<String> signedUrl(String path) async {
+    throw UnimplementedError();
+  }
 }

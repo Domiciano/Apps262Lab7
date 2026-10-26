@@ -31,7 +31,7 @@ flutter run
 - **Todo el Laboratorio 6.** Registro, inicio de sesión, el muro paginado, los «me gusta» y publicar texto.
 - **Las dependencias y los permisos.** `image_picker` y `uuid` en el `pubspec.yaml`, los textos de permiso en `ios/Runner/Info.plist` y el permiso de archivos en los `entitlements` de macOS.
 - **Toda la interfaz.** `Avatar`, el botón de cámara de `ProfilePage`, el botón *Agregar foto*, la vista previa y *Quitar foto* de `ComposeScreen`, y la imagen de `PostCard`. Los dos botones de foto todavía no lanzan su evento: `() {}`.
-- **Las entidades y los contratos.** `PickedPhoto`, `Profile` con `avatarPath` y `avatarUrl`, `Post` con `authorAvatarUrl` e `imageUrl`, y los contratos `AvatarRepository`, `ProfileRepository` y `PostRepository` completos.
+- **Las entidades y los contratos.** `PickedPhoto`, `Profile` con `avatarPath` y `avatarUrl`, `Post` con `authorAvatarUrl`, `imagePath` e `imageUrl`, y los contratos `AvatarRepository`, `ProfileRepository` y `PostRepository` completos.
 - **Los eventos y los estados.** `AvatarChangeRequested`, `ComposePhotoRequested`, `ComposePhotoRemoved`, `FeedState.avatarStatus` y `ComposeState.photo`, con sus `copyWith`.
 
 Los métodos nuevos de cada capa ya existen con su firma, pero su cuerpo es `throw UnimplementedError()`. Los `on` nuevos de los Bloc solo imprimen el evento que reciben. Cuando conectes los botones, verás en la consola:
@@ -58,9 +58,10 @@ ComposeBloc recibió ComposePhotoRequested()
 
 - `posts/domain/usecases/pick_post_image_usecase.dart`: `call`.
 - `posts/domain/usecases/publish_post_usecase.dart`: subir la foto antes de crear el post.
-- `posts/data/source/supabase_post_image_data_source.dart`: `upload`.
-- `posts/data/repository/post_repository_impl.dart`: `pickImage` y `uploadImage`.
-- `posts/data/source/supabase_post_data_source.dart`: `image_path` en `create` y en el select, y las URLs firmadas en `_toPosts`.
+- `posts/data/source/supabase_post_image_data_source.dart`: `upload` y `signedUrl`.
+- `posts/data/repository/post_repository_impl.dart`: `pickImage`, `uploadImage` e `imageUrl`.
+- `posts/data/source/supabase_post_data_source.dart`: `image_path` en `create`, en el select y en `_toPost`.
+- `posts/domain/usecases/get_feed_usecase.dart` y `get_my_posts_usecase.dart`: completar cada post con la URL firmada de su imagen.
 - `compose/ui/bloc/compose_bloc.dart`: los `on` de la foto, y pasar `state.photo` al publicar.
 - `compose/ui/screens/compose_screen.dart`: que *Agregar foto* lance `ComposePhotoRequested`.
 
