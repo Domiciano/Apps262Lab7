@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:moviles_auth/components/photo_source_sheet.dart';
-import 'package:moviles_auth/features/avatar/domain/entities/photo_source.dart';
 import 'package:moviles_auth/features/home/ui/bloc/feed_bloc.dart';
 import 'package:moviles_auth/features/home/ui/bloc/feed_event.dart';
 import 'package:moviles_auth/features/home/ui/bloc/feed_state.dart';
@@ -37,15 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  Future<void> _choosePhoto() async {
-    final source = await showModalBottomSheet<PhotoSource>(
-      context: context,
-      builder: (context) => const PhotoSourceSheet(),
-    );
-    if (source != null && mounted) {
-      context.read<FeedBloc>().add(AvatarChangeRequested(source));
-    }
-  }
+  Future<void> _choosePhoto() async {}
 
   Widget _page(FeedState state) {
     final bloc = context.read<FeedBloc>();

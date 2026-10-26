@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:moviles_auth/components/error_message.dart';
-import 'package:moviles_auth/components/photo_source_sheet.dart';
 import 'package:moviles_auth/components/primary_button.dart';
-import 'package:moviles_auth/features/avatar/domain/entities/photo_source.dart';
 import 'package:moviles_auth/features/compose/ui/bloc/compose_bloc.dart';
 import 'package:moviles_auth/features/compose/ui/bloc/compose_event.dart';
 import 'package:moviles_auth/features/compose/ui/bloc/compose_state.dart';
@@ -36,15 +34,7 @@ class _ComposeScreenState extends State<ComposeScreen> {
     super.dispose();
   }
 
-  Future<void> _choosePhoto() async {
-    final source = await showModalBottomSheet<PhotoSource>(
-      context: context,
-      builder: (context) => const PhotoSourceSheet(),
-    );
-    if (source != null && mounted) {
-      context.read<ComposeBloc>().add(ComposePhotoRequested(source));
-    }
-  }
+  Future<void> _choosePhoto() async {}
 
   Widget _photo(ComposeState state) {
     final photo = state.photo;

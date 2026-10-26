@@ -5,7 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:moviles_auth/components/avatar.dart';
 import 'package:moviles_auth/features/auth/domain/entities/profile.dart';
-import 'package:moviles_auth/features/avatar/domain/entities/photo_source.dart';
 import 'package:moviles_auth/features/avatar/domain/entities/picked_photo.dart';
 import 'package:moviles_auth/features/compose/ui/bloc/compose_bloc.dart';
 import 'package:moviles_auth/features/compose/ui/bloc/compose_event.dart';
@@ -248,14 +247,6 @@ void main() {
     expect(find.text('@ana.dev'), findsOneWidget);
     expect(find.text('Aún no has publicado'), findsOneWidget);
 
-    await tester.tap(find.byTooltip('Cambiar foto'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('Elegir de la galería'));
-    await tester.pumpAndSettle();
-    final change = recorder.events.whereType<AvatarChangeRequested>().single;
-    expect(change.source, PhotoSource.gallery);
-    expect(find.text('La foto pesa más de 2 MB'), findsOneWidget);
-
     await tester.tap(find.text('Cerrar sesión'));
     await tester.pumpAndSettle();
     expect(find.text('login'), findsOneWidget);
@@ -281,31 +272,5 @@ void main() {
     await tester.pump();
     final event = recorder.events.single as ComposeSubmitted;
     expect(event.content, 'Hola muro');
-  });
-
-  testWidgets('ComposeScreen attaches and removes a photo', (tester) async {
-    final recorder = _EventRecorder();
-    Bloc.observer = recorder;
-    await tester.pumpWidget(
-      MaterialApp(
-        home: BlocProvider<ComposeBloc>(
-          create: (_) => _FakeComposeBloc(),
-          child: const ComposeScreen(),
-        ),
-      ),
-    );
-    await tester.tap(find.text('Agregar foto'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('Tomar una foto'));
-    await tester.pumpAndSettle();
-    final request = recorder.events.whereType<ComposePhotoRequested>().single;
-    expect(request.source, PhotoSource.camera);
-    expect(find.byType(Image), findsOneWidget);
-    expect(find.text('Agregar foto'), findsNothing);
-
-    await tester.tap(find.byTooltip('Quitar foto'));
-    await tester.pumpAndSettle();
-    expect(find.byType(Image), findsNothing);
-    expect(find.text('Agregar foto'), findsOneWidget);
   });
 }

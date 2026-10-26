@@ -30,11 +30,11 @@ flutter run
 
 - **Todo el Laboratorio 6.** Registro, inicio de sesión, el muro paginado, los «me gusta» y publicar texto.
 - **Las dependencias y los permisos.** `image_picker` y `uuid` en el `pubspec.yaml`, los textos de permiso en `ios/Runner/Info.plist` y el permiso de archivos en los `entitlements` de macOS.
-- **Toda la interfaz.** `Avatar`, `PhotoSourceSheet` (galería o cámara), el botón de cámara de `ProfilePage`, la vista previa y el botón *Quitar foto* de `ComposeScreen`, y la imagen de `PostCard`.
+- **Toda la interfaz.** `Avatar`, `PhotoSourceSheet` (galería o cámara), el botón de cámara de `ProfilePage`, la vista previa y el botón *Quitar foto* de `ComposeScreen`, y la imagen de `PostCard`. Los botones de foto llaman a `_choosePhoto`, que está vacío.
 - **Las entidades y los contratos.** `PhotoSource`, `PickedPhoto`, `Profile` con `avatarPath` y `avatarUrl`, `Post` con `authorAvatarUrl` e `imageUrl`, y los contratos `AvatarRepository`, `ProfileRepository` y `PostRepository` completos.
 - **Los eventos y los estados.** `AvatarChangeRequested`, `ComposePhotoRequested`, `ComposePhotoRemoved`, `FeedState.avatarStatus` y `ComposeState.photo`, con sus `copyWith`.
 
-Los métodos nuevos de cada capa ya existen con su firma, pero su cuerpo es `throw UnimplementedError()`. Los `on` nuevos de los Bloc solo imprimen el evento que reciben:
+Los métodos nuevos de cada capa ya existen con su firma, pero su cuerpo es `throw UnimplementedError()`. Los `on` nuevos de los Bloc solo imprimen el evento que reciben. Cuando escribas `_choosePhoto`, verás en la consola:
 
 ```text
 FeedBloc recibió AvatarChangeRequested(gallery)
@@ -52,6 +52,7 @@ ComposeBloc recibió ComposePhotoRequested(camera)
 - `auth/data/source/supabase_profile_data_source.dart` y su `Impl`: `updateAvatarPath`, y la URL pública en `getProfile`.
 - `posts/data/source/supabase_post_data_source.dart`: `avatar_path` en el select y su URL pública en `_toPost`.
 - `home/ui/bloc/feed_bloc.dart`: el `on` de `AvatarChangeRequested`.
+- `home/ui/screens/home_screen.dart`: `_choosePhoto`, que abre `PhotoSourceSheet` y lanza `AvatarChangeRequested`.
 
 **Parte 2**
 
@@ -61,5 +62,6 @@ ComposeBloc recibió ComposePhotoRequested(camera)
 - `posts/data/repository/post_repository_impl.dart`: `pickImage` y `uploadImage`.
 - `posts/data/source/supabase_post_data_source.dart`: `image_path` en `create` y en el select, y las URLs firmadas en `_toPosts`.
 - `compose/ui/bloc/compose_bloc.dart`: los `on` de la foto, y pasar `state.photo` al publicar.
+- `compose/ui/screens/compose_screen.dart`: `_choosePhoto`, que abre `PhotoSourceSheet` y lanza `ComposePhotoRequested`.
 
 `flutter test` comprueba que la interfaz lanza los eventos correctos.
