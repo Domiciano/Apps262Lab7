@@ -1,10 +1,11 @@
 import 'package:moviles_auth/features/auth/data/source/supabase_auth_data_source.dart';
 import 'package:moviles_auth/features/auth/domain/entities/app_user.dart';
 import 'package:moviles_auth/features/auth/domain/repository/auth_repository.dart';
+import 'package:moviles_auth/injection_container.dart';
 
 /// Fulfils AuthRepository by delegating on the Supabase data source.
 class AuthRepositoryImpl implements AuthRepository {
-  final SupabaseAuthDataSource _dataSource = SupabaseAuthDataSource();
+  final SupabaseAuthDataSource _dataSource = sl();
 
   @override
   Future<AppUser> signUp({required String email, required String password}) {

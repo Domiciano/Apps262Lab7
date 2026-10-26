@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:moviles_auth/injection_container.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'package:moviles_auth/features/compose/ui/bloc/compose_bloc.dart';
@@ -18,6 +19,7 @@ Future<void> main() async {
     url: 'https://pmijmrkaucdwadmnnvbo.supabase.co',
     publishableKey: 'sb_publishable_8tS9o_mjkvKA4z9WUvRjCg_01oNcv6y',
   );
+  initDependencies();
   runApp(const App());
 }
 
@@ -34,17 +36,19 @@ class App extends StatelessWidget {
       initialRoute: '/login',
       routes: {
         '/login': (_) => BlocProvider(
-          create: (_) => LoginBloc(),
+          create: (_) => sl<LoginBloc>(),
           child: const LoginScreen(),
         ),
         '/register': (_) => BlocProvider(
-          create: (_) => RegisterBloc(),
+          create: (_) => sl<RegisterBloc>(),
           child: const RegisterScreen(),
         ),
-        '/home': (_) =>
-            BlocProvider(create: (_) => FeedBloc(), child: const HomeScreen()),
+        '/home': (_) => BlocProvider(
+          create: (_) => sl<FeedBloc>(),
+          child: const HomeScreen(),
+        ),
         '/compose': (_) => BlocProvider(
-          create: (_) => ComposeBloc(),
+          create: (_) => sl<ComposeBloc>(),
           child: const ComposeScreen(),
         ),
       },

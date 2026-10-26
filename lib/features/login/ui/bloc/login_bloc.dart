@@ -2,10 +2,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:moviles_auth/features/auth/domain/usecases/sign_in_usecase.dart';
 import 'package:moviles_auth/features/login/ui/bloc/login_event.dart';
 import 'package:moviles_auth/features/login/ui/bloc/login_state.dart';
+import 'package:moviles_auth/injection_container.dart';
 
 /// Turns the sign in form into a call to SignInUseCase.
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
-  final SignInUseCase _signIn = SignInUseCase();
+  final SignInUseCase _signIn = sl();
 
   LoginBloc() : super(const LoginState()) {
     on<LoginSubmitted>(_onSubmitted);

@@ -1,13 +1,12 @@
-import 'package:moviles_auth/features/auth/data/repository/profile_repository_impl.dart';
-import 'package:moviles_auth/features/auth/data/repository/auth_repository_impl.dart';
 import 'package:moviles_auth/features/auth/domain/entities/profile.dart';
 import 'package:moviles_auth/features/auth/domain/repository/auth_repository.dart';
 import 'package:moviles_auth/features/auth/domain/repository/profile_repository.dart';
+import 'package:moviles_auth/injection_container.dart';
 
 /// Opens a session and then reads the profile of that account.
 class SignInUseCase {
-  final AuthRepository _auth = AuthRepositoryImpl();
-  final ProfileRepository _profiles = ProfileRepositoryImpl();
+  final AuthRepository _auth = sl();
+  final ProfileRepository _profiles = sl();
 
   Future<Profile> call({
     required String email,

@@ -1,22 +1,24 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:moviles_auth/features/auth/domain/usecases/get_my_profile_usecase.dart';
 import 'package:moviles_auth/features/auth/domain/usecases/sign_out_usecase.dart';
+import 'package:moviles_auth/features/avatar/domain/usecases/change_avatar_usecase.dart';
 import 'package:moviles_auth/features/home/ui/bloc/feed_event.dart';
 import 'package:moviles_auth/features/home/ui/bloc/feed_state.dart';
 import 'package:moviles_auth/features/posts/domain/entities/post.dart';
 import 'package:moviles_auth/features/posts/domain/usecases/get_feed_usecase.dart';
 import 'package:moviles_auth/features/posts/domain/usecases/get_my_posts_usecase.dart';
 import 'package:moviles_auth/features/posts/domain/usecases/toggle_like_usecase.dart';
+import 'package:moviles_auth/injection_container.dart';
 
 /// Loads the profile and the wall, toggles likes, changes the photo and signs out.
 class FeedBloc extends Bloc<FeedEvent, FeedState> {
   static const pageSize = 10;
-  final GetMyProfileUseCase _getMyProfile = GetMyProfileUseCase();
-  final SignOutUseCase _signOut = SignOutUseCase();
-  final GetFeedUseCase _getFeed = GetFeedUseCase();
-  final GetMyPostsUseCase _getMyPosts = GetMyPostsUseCase();
-  final ToggleLikeUseCase _toggleLike = ToggleLikeUseCase();
+  final GetMyProfileUseCase _getMyProfile = sl();
+  final SignOutUseCase _signOut = sl();
+  final GetFeedUseCase _getFeed = sl();
+  final GetMyPostsUseCase _getMyPosts = sl();
+  final ToggleLikeUseCase _toggleLike = sl();
+  final ChangeAvatarUseCase _changeAvatarUseCase = sl();
 
   FeedBloc() : super(const FeedState()) {
     on<ProfileRequested>(_onProfileRequested);
@@ -101,7 +103,23 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
     AvatarChangeRequested event,
     Emitter<FeedState> emit,
   ) async {
-    debugPrint('FeedBloc recibió $event');
+    emit(state.copyWith(avatarStatus: AvatarStatus.uploading));
+    try {
+      final profile = await _changeAvatarUseCase();
+      if (profile == null) {
+        emit(state.copyWith(avatarStatus: AvatarStatus.idle));
+        return;
+      }
+      emit(state.copyWith(profile: profile, avatarStatus: AvatarStatus.idle));
+      add(FeedStarted());
+    } on Exception catch (e) {
+      emit(
+        state.copyWith(
+          avatarStatus: AvatarStatus.failure,
+          errorMessage: _message(e),
+        ),
+      );
+    }
   }
 
   Future<void> _onProfileRequested(

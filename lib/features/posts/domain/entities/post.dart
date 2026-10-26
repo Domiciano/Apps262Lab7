@@ -6,6 +6,7 @@ class Post {
   final String authorUsername;
   final String authorName;
   final String? authorAvatarUrl;
+  final String? imagePath;
   final String? imageUrl;
   final int likeCount;
   final bool likedByMe;
@@ -17,12 +18,13 @@ class Post {
     required this.authorUsername,
     required this.authorName,
     this.authorAvatarUrl,
+    this.imagePath,
     this.imageUrl,
     required this.likeCount,
     required this.likedByMe,
   });
 
-  Post copyWith({int? likeCount, bool? likedByMe}) {
+  Post copyWith({String? imageUrl, int? likeCount, bool? likedByMe}) {
     return Post(
       id: id,
       content: content,
@@ -30,7 +32,8 @@ class Post {
       authorUsername: authorUsername,
       authorName: authorName,
       authorAvatarUrl: authorAvatarUrl,
-      imageUrl: imageUrl,
+      imagePath: imagePath,
+      imageUrl: imageUrl ?? this.imageUrl,
       likeCount: likeCount ?? this.likeCount,
       likedByMe: likedByMe ?? this.likedByMe,
     );
